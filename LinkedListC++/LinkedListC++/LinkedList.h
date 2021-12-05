@@ -16,6 +16,23 @@ public:
 		Count = 0;
 	}
 
+	~LinkedList()
+	{
+		Clear();
+	}
+
+	void Clear()
+	{
+		Node* Nods = Head;
+		while (Nods)
+		{
+			Node* Temp = Nods;
+			Nods = Nods->PointerNext;
+			delete Temp;
+		}
+		Count = 0;
+	}
+
 	Node* Seach(int Value)
 	{
 		if (Head->Value == Value)
@@ -34,6 +51,7 @@ public:
 		if (Head == nullptr)
 		{
 			Head = new Node(Value);
+			Head->PointerNext = Tail;
 			Count++;
 		}
 		else if(Count == 1)
@@ -48,8 +66,9 @@ public:
 			Node* node = new Node(Value);
 			node->PointerNext = Head;
 			Head = node;
+			Count++;
 		}
-		Count++;
+
 	}
 	void AddLast(int Value)
 	{
@@ -85,12 +104,25 @@ public:
 		else
 		{
 			Node* Temp = Head;
-			while(Temp->PointerNext->Value != Value && Temp->PointerNext != nullptr)
+			if (Head->Value == Value)
+			{
+				Node* TempPoint = Head;
+				Head = Head->PointerNext;
+				delete TempPoint;
+				Count--;
+				return;
+			}
+			while(Temp->PointerNext != nullptr && Temp->PointerNext->Value != Value)
 			{
 				Temp = Temp->PointerNext;
 			}
-			Node* point = Temp->PointerNext->PointerNext;
-			Temp->PointerNext = point;
+			;
+			Node* TempPoint = Temp->PointerNext;
+			Temp->PointerNext = Temp->PointerNext->PointerNext;
+			
+			delete TempPoint;
+			Count--;
+			//delete *TempPoint;
 		}
 	}
 	/*void RemoveFirst(int Value)
